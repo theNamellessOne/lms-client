@@ -14,12 +14,14 @@ import { useRouter } from "next/navigation";
 
 type AuthContext = {
   isAuth: boolean;
+  currentUser: any;
   login: (r: AxiosResponse) => void;
   logout: () => void;
 };
 
 export const AuthContext = createContext<AuthContext>({
   isAuth: false,
+  currentUser: {},
   login: () => {},
   logout: () => {},
 });
@@ -29,11 +31,19 @@ export const useAuth = () => {
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const [currentUser, setCurrentUser] = useState({});
   const [isAuth, setIsAuth] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    checkAuth().then(setIsAuth);
+    checkAuth().then((r) => {
+      if (r === false) {
+        setIsAuth(false);
+        return;
+      }
+      setIsAuth(true);
+      setCurrentUser(r);
+    });
   }, []);
 
   const login = (r: AxiosResponse) => {
@@ -51,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuth, login, logout }}>
+    <AuthContext.Provider value={{ currentUser, isAuth, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

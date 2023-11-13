@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <main className={"lg:pl-64"}>
               <Navbar />
               <Toaster position={"bottom-left"} />
-              {children}
+              <div className={"p-6"}>{children}</div>
             </main>
           </ThemeProvider>
         </AuthProvider>

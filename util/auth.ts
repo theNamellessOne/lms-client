@@ -18,7 +18,7 @@ export const checkAuth = async () => {
         })
       ).data,
     );
-    return true;
+    return getCurrentUser();
   } catch (err) {
     return false;
   }
@@ -42,5 +42,5 @@ export const setCurrentUser = (user: any) => {
 };
 
 export const getCurrentUser = () => {
-  return getCookie("user");
+  return JSON.parse(getCookie("user") || "{}");
 };

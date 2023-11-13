@@ -10,28 +10,48 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { LogOut, User } from "lucide-react";
-import { getCurrentUser } from "@/util/auth";
 import { useAuth } from "@/providers/auth-provider";
+import Image from "next/image";
 
 export function UserDetails() {
-  const user = getCurrentUser();
-  const { isAuth, logout } = useAuth();
+  // @ts-ignore
+  const { isAuth, currentUser, logout } = useAuth();
 
   return (
     <>
-      {isAuth ? (
+      {isAuth && currentUser ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost">
-              <User className={"h-[1.2rem] w-[1.2rem]"} />
+            <Button
+              variant="ghost"
+              className={"p-0 h-fit rounded-full overflow-hidden"}
+            >
+              {currentUser.avatarUrl ? (
+                <Image
+                  height={30}
+                  width={30}
+                  src={currentUser.avatarUrl}
+                  alt={"url"}
+                />
+              ) : (
+                <User />
+              )}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 mr-2">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>
+              <p>
+                {currentUser.lastName}
+                {currentUser.firstName}
+              </p>
+              <p className={"text-gray-500 text-sm pt-2"}>
+                {currentUser.email}
+              </p>
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={logout} className={"cursor-pointer"}>
               <LogOut className="mr-2 h-4 w-4" />
-              <span onClick={logout}>Log out</span>
+              <span>Log out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

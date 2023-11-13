@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Compass, Home, Layout, LogIn } from "lucide-react";
+import { BarChart, Compass, Home, Layout, List, LogIn } from "lucide-react";
 import { SidebarItem } from "@/components/layout/sidebar/sidebar-item";
 import { useAuth } from "@/providers/auth-provider";
+import { ThemeSwitch } from "@/components/theme-switch";
 
 const baseRoutes = [
   {
@@ -19,7 +20,7 @@ const baseRoutes = [
   {
     icon: Compass,
     label: "Browse",
-    href: "/search",
+    href: "/browse",
   },
 ];
 
@@ -33,16 +34,32 @@ const guestRoutes = [
 ];
 
 const authRoutes = [...baseRoutes];
+const teacherRoutes = [
+  ...authRoutes,
+  {
+    icon: List,
+    label: "Courses",
+    href: "/teacher/courses",
+  },
+  {
+    icon: BarChart,
+    label: "Analytics",
+    href: "/teacher/analytics",
+  },
+];
 
 export function Sidebar() {
-  const { isAuth } = useAuth();
+  const { isAuth, currentUser } = useAuth();
 
-  const routes = isAuth ? authRoutes : guestRoutes;
+  let routes;
+
+  routes = isAuth ? authRoutes : guestRoutes;
+  routes = currentUser["isTeacher"] ? teacherRoutes : routes;
 
   return (
-    <div className={"h-full border-r flex flex-col"}>
+    <div className={"h-full border-r overflow-y-scroll flex flex-col"}>
       <div className={"p-6"}>
-        <Image src={"./logo.svg"} alt={"logo"} width={130} height={130} />
+        <Image src={"/logo.svg"} alt={"logo"} width={130} height={130} />
       </div>
       <div className={"flex flex-col gap-y-1 w-full"}>
         {routes.map((route, idx) => {
@@ -55,6 +72,9 @@ export function Sidebar() {
             />
           );
         })}
+      </div>
+      <div className={"p-4 h-full flex justify-start items-end"}>
+        <ThemeSwitch />
       </div>
     </div>
   );

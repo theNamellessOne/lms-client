@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { httpClient } from "@/lib/httpClient";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
-import { PasswordInput } from "@/components/form/input/password-input";
+import { PasswordInput } from "@/components/password-input";
 import { useAuth } from "@/providers/auth-provider";
 
 const formSchema = z.object({
